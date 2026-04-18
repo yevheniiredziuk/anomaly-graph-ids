@@ -15,6 +15,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T10-T13 done — sliding-window detector with composite α₁+α₂+α₃ scoring.
 - T14 done — PL/pgSQL rule-based detectors (port_scan, brute_force, dos_flood) on PostgreSQL baseline.
 - T15-T16 done — evaluation framework (P/R/F1 + per-attack Recall) + grid search for both methods.
+- T17 done — JMH benchmarks for query latency (Section 6.4).
 
 ## Prerequisites
 
@@ -235,6 +236,22 @@ detector must have been run with `detector.weights.thetaA=0.0` so every
     -Dspring-boot.run.main-class=ua.mitit.ids.evaluation.cli.EvaluationCliApplication \
     -Dspring-boot.run.arguments="--mode=grid-search-graph --start=... --end=...")
 ```
+
+### 7e. JMH benchmarks (T17)
+
+JMH suite for Section 6.4 of the article — p50/p95/p99 latency of window
+queries on both Neo4j and PostgreSQL.
+
+```bash
+# Smoke test (~5 min)
+./scripts/run_benchmarks.sh --quick
+
+# Full run (~30-60 min)
+./scripts/run_benchmarks.sh
+```
+
+Output JSON in `results/benchmark-<timestamp>.json`; a markdown summary
+is auto-printed via `scripts/collect_benchmark_results.sh`.
 
 ### 8. Load aggregated edges into Neo4j (T07 reference)
 
