@@ -13,6 +13,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T07 done — Java ETL for Neo4j via UNWIND batches (~19.5k edges/sec).
 - T09 done — baseline BC profile (μ, σ per host) from Monday benign traffic.
 - T10-T13 done — sliding-window detector with composite α₁+α₂+α₃ scoring.
+- T14 done — PL/pgSQL rule-based detectors (port_scan, brute_force, dos_flood) on PostgreSQL baseline.
 
 ## Prerequisites
 
@@ -180,6 +181,33 @@ Top anomalous hosts:
 MATCH (e:AnomalyEvent)
 RETURN e.host_ip AS ip, COUNT(*) AS events, MAX(e.score) AS max_score
 ORDER BY events DESC LIMIT 10;
+```
+
+### 7c. Run PL/pgSQL baseline detectors (T14)
+
+Flow-centric rule-based detectors for fair comparison with the graph-based
+method (Section 6.4). Installs PL/pgSQL functions (port_scan, brute_force,
+dos_flood) and runs them across Tue+Wed in 5-minute sliding windows.
+
+```bash
+./scripts/run_baseline_detectors.sh --reset
+```
+
+Expected runtime: ~15 s on laptop hardware (partition pruning drops ~1.12 M
+benign flows per window into a few tens of ms).
+
+Integration tests against an isolated scratch database:
+
+```bash
+./baseline/sql/detectors/test_detectors.sh
+```
+
+Inspect:
+
+```bash
+docker exec -it agids-postgres psql -U ids -d ids -c "
+    SELECT detector_name, COUNT(*) AS n, COUNT(DISTINCT src_ip) AS sources
+    FROM baseline_detections GROUP BY 1 ORDER BY n DESC;"
 ```
 
 ### 8. Load aggregated edges into Neo4j (T07 reference)
