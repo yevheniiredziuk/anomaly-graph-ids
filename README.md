@@ -11,6 +11,8 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T05 done — Neo4j migration runner + V001/V002 constraints & indexes applied.
 - T06 done — Java ETL for PostgreSQL via CopyManager (~275k rows/sec).
 - T07 done — Java ETL for Neo4j via UNWIND batches (~19.5k edges/sec).
+- T09 done — baseline BC profile (μ, σ per host) from Monday benign traffic.
+- T10-T13 done — sliding-window detector with composite α₁+α₂+α₃ scoring.
 
 ## Prerequisites
 
@@ -149,7 +151,38 @@ docker exec -it agids-postgres psql -U ids -d ids -c \
     "SELECT COUNT(*) AS flows, COUNT(DISTINCT source_ip) AS uniq_src FROM flows;"
 ```
 
-### 7. Load aggregated edges into Neo4j (T07)
+### 7a. Compute baseline BC profile (T09)
+
+After the Neo4j graph is loaded, run the baseline computation over Monday:
+
+```bash
+(cd detector && ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.detector.baseline.BaselineCliApplication \
+    -Dspring-boot.run.arguments="--start=2017-07-03T00:00:00Z --end=2017-07-04T00:00:00Z")
+```
+
+Writes `baseline_bc_mean`, `baseline_bc_std`, `baseline_samples` on each Host. Expected runtime: 5-15 min.
+
+### 7b. Run sliding-window detector (T10-T13)
+
+```bash
+(cd detector && ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.detector.scoring.DetectorCliApplication \
+    -Dspring-boot.run.arguments="--start=2017-07-04T00:00:00Z --end=2017-07-06T00:00:00Z")
+```
+
+Creates `:AnomalyEvent` nodes for every window where A(v,t) > θ_A. Each event
+has `host_ip`, `t_window_start`, `score`, and the three component values.
+
+Top anomalous hosts:
+
+```cypher
+MATCH (e:AnomalyEvent)
+RETURN e.host_ip AS ip, COUNT(*) AS events, MAX(e.score) AS max_score
+ORDER BY events DESC LIMIT 10;
+```
+
+### 8. Load aggregated edges into Neo4j (T07 reference)
 
 Assumes T03 preprocessing produced `data/neo4j-import/cicids2017_mon_tue_wed.csv`
 and T05 migrations applied.

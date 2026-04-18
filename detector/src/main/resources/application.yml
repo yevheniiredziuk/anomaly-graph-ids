@@ -1,17 +1,48 @@
 spring:
   application:
     name: agids-detector
+  main:
+    banner-mode: "off"
+  # Neo4jClientConfig (common/neo4j) provides the Driver bean.
+  # Disable Spring Data Neo4j auto-config (SDN is not used — we talk to Neo4j
+  # via the raw driver) so it doesn't eagerly probe the connection at boot.
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveRepositoriesAutoConfiguration
 
 neo4j:
-  uri: bolt://localhost:7687
-  username: neo4j
+  uri: bolt://${NEO4J_HOST:localhost}:${NEO4J_BOLT_PORT:7687}
+  username: ${NEO4J_USER:neo4j}
   password: ${NEO4J_PASSWORD:changeme-local-only}
   pool:
     max-size: 50
     connection-acquisition-timeout-seconds: 60
 
+baseline:
+  snapshot-duration-minutes: 5
+  sampling-size: 1000
+  sampling-seed: 42
+  min-samples-per-host: 3
+
+detector:
+  window-size-minutes: 5
+  step-size-minutes: 5
+  sampling-size: 1000
+  sampling-seed: 42
+  louvain-seed: 42
+  weights:
+    w1: 0.4
+    w2: 0.3
+    w3: 0.3
+    thetaA: 0.5
+    theta1: 2.0
+    epsilon: 1e-6
+
 logging:
   level:
     root: INFO
-    ua.mitit.ids: DEBUG
+    ua.mitit.ids: INFO
     org.neo4j.driver: WARN
