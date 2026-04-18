@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: agids-evaluation
+  main:
+    banner-mode: "off"
+  # We provide DataSource/JdbcTemplate via PostgresDataSourceConfig and the
+  # Neo4j Driver via common/neo4j/Neo4jClientConfig. Disable Spring Data Neo4j
+  # auto-config (unused, eagerly probes on startup).
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveRepositoriesAutoConfiguration
+
+postgres:
+  url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:ids}
+  username: ${POSTGRES_USER:ids}
+  password: ${POSTGRES_PASSWORD:changeme-local-only}
+  pool:
+    max-size: 5
+
+neo4j:
+  uri: bolt://${NEO4J_HOST:localhost}:${NEO4J_BOLT_PORT:7687}
+  username: ${NEO4J_USER:neo4j}
+  password: ${NEO4J_PASSWORD:changeme-local-only}
+  pool:
+    max-size: 10
+    connection-acquisition-timeout-seconds: 60
+
+logging:
+  level:
+    root: INFO
+    ua.mitit.ids: INFO
+    org.neo4j.driver: WARN

@@ -14,6 +14,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T09 done — baseline BC profile (μ, σ per host) from Monday benign traffic.
 - T10-T13 done — sliding-window detector with composite α₁+α₂+α₃ scoring.
 - T14 done — PL/pgSQL rule-based detectors (port_scan, brute_force, dos_flood) on PostgreSQL baseline.
+- T15-T16 done — evaluation framework (P/R/F1 + per-attack Recall) + grid search for both methods.
 
 ## Prerequisites
 
@@ -208,6 +209,31 @@ Inspect:
 docker exec -it agids-postgres psql -U ids -d ids -c "
     SELECT detector_name, COUNT(*) AS n, COUNT(DISTINCT src_ip) AS sources
     FROM baseline_detections GROUP BY 1 ORDER BY n DESC;"
+```
+
+### 7d. Evaluate + grid-search (T15-T16)
+
+Compute P/R/F1 against ground truth (derived from `flows.label`) and search
+for best graph-method weights. For grid search to be meaningful the graph
+detector must have been run with `detector.weights.thetaA=0.0` so every
+(host, window) gets an `:AnomalyEvent` with its raw α components.
+
+```bash
+# One-shot detector run with θA=0 (captures all events for re-scoring)
+(cd detector && ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.detector.scoring.DetectorCliApplication \
+    -Dspring-boot.run.jvmArguments="-Ddetector.weights.thetaA=0.0" \
+    -Dspring-boot.run.arguments="--start=2017-07-04T09:00:00Z --end=2017-07-04T10:00:00Z")
+
+# Side-by-side comparison at current config
+(cd evaluation && POSTGRES_PORT=15432 ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.evaluation.cli.EvaluationCliApplication \
+    -Dspring-boot.run.arguments="--mode=compare --start=... --end=...")
+
+# Grid search over (w1, w2, w3, θA) — ~200 configs, in-memory, <1 min
+(cd evaluation && POSTGRES_PORT=15432 ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.evaluation.cli.EvaluationCliApplication \
+    -Dspring-boot.run.arguments="--mode=grid-search-graph --start=... --end=...")
 ```
 
 ### 8. Load aggregated edges into Neo4j (T07 reference)

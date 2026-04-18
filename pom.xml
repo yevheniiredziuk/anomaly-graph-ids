@@ -23,6 +23,7 @@
     <module>detector</module>
     <module>baseline</module>
     <module>benchmark</module>
+    <module>evaluation</module>
   </modules>
 
   <properties>
