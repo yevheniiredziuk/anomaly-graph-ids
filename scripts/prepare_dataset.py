@@ -272,6 +272,49 @@ def main() -> int:
     edges.to_parquet(parquet_out, index=False)
     LOG.info("Saved aggregated edges: %s", parquet_out)
 
+    # --- Save raw cleaned flows for PostgreSQL (non-aggregated) ---
+    # Flow-centric baseline needs individual flows, not super-edges.
+    postgres_csv = args.out_dir / "flows_for_postgres.csv"
+    LOG.info("Saving non-aggregated flows for PostgreSQL baseline...")
+
+    # CICIDS2017 timestamps are naive; treat as UTC so day-boundary partitions
+    # (flows_mon/tue/wed) align with the t_start date.
+    ts_utc = combined["Timestamp"].dt.tz_localize("UTC")
+    duration_us = combined["Flow Duration"].clip(lower=0).astype("int64")
+    t_end_utc = ts_utc + pd.to_timedelta(duration_us, unit="us")
+
+    iso_fmt = "%Y-%m-%dT%H:%M:%S%z"
+    t_start_str = ts_utc.dt.strftime(iso_fmt).str.replace(
+        r"([+-]\d{2})(\d{2})$", r"\1:\2", regex=True
+    )
+    t_end_str = t_end_utc.dt.strftime(iso_fmt).str.replace(
+        r"([+-]\d{2})(\d{2})$", r"\1:\2", regex=True
+    )
+
+    pg_df_out = pd.DataFrame({
+        "source_ip":        combined["Source IP"],
+        "source_port":      combined["Source Port"].astype("int32"),
+        "destination_ip":   combined["Destination IP"],
+        "destination_port": combined["Destination Port"].astype("int32"),
+        "protocol":         combined["Protocol"].astype("int16"),
+        "t_start":          t_start_str,
+        "t_end":            t_end_str,
+        "flow_duration_us": duration_us,
+        "bytes_fwd":        combined["Total Length of Fwd Packets"].astype("int64"),
+        "bytes_bwd":        combined["Total Length of Bwd Packets"].astype("int64"),
+        "packets_fwd":      combined["Total Fwd Packets"].astype("int64"),
+        "packets_bwd":      combined["Total Backward Packets"].astype("int64"),
+        "syn_count":        combined["SYN Flag Count"].astype("int32"),
+        "rst_count":        combined["RST Flag Count"].astype("int32"),
+        "psh_count":        combined["PSH Flag Count"].astype("int32"),
+        "ack_count":        combined["ACK Flag Count"].astype("int32"),
+        "fin_count":        combined["FIN Flag Count"].astype("int32"),
+        "urg_count":        combined["URG Flag Count"].astype("int32"),
+        "label":            combined["Label"],
+    })
+    pg_df_out.to_csv(postgres_csv, index=False)
+    LOG.info("Saved PostgreSQL CSV: %s (%d flows)", postgres_csv, len(pg_df_out))
+
     LOG.info("\n[done] Dataset preparation complete.")
     return 0
 

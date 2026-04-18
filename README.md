@@ -7,6 +7,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T01 done — Maven multi-module skeleton initialized.
 - T02 done — local infrastructure (Neo4j + GDS + APOC + PostgreSQL) via Docker Compose.
 - T03 done — CICIDS2017 download + Engelen-style cleanup + 60s aggregation.
+- T04 done — PostgreSQL partitioned schema + indexes + COPY bulk-load.
 
 ## Prerequisites
 

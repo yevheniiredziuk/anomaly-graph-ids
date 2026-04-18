@@ -47,9 +47,23 @@ echo "=== Checking PostgreSQL health ==="
 docker exec agids-postgres pg_isready -U "${POSTGRES_USER}" -d "${POSTGRES_DB}"
 
 echo ""
-echo "=== Verifying PostgreSQL init script ran ==="
-docker exec agids-postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" \
-    -c "SELECT initialized_at FROM __db_initialized;"
+echo "=== Verifying PostgreSQL schema (T04) ==="
+docker exec agids-postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "
+SELECT schemaname, tablename
+FROM pg_tables
+WHERE schemaname = 'public'
+  AND tablename IN ('flows', 'hosts', 'baseline_detections')
+   OR tablename LIKE 'flows\\_%'
+ORDER BY tablename;"
+
+echo ""
+echo "=== Verifying PostgreSQL indexes ==="
+docker exec agids-postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "
+SELECT tablename, indexname
+FROM pg_indexes
+WHERE schemaname = 'public'
+  AND tablename IN ('flows', 'hosts', 'baseline_detections')
+ORDER BY tablename, indexname;"
 
 echo ""
 echo "✓ Infrastructure is up and healthy"

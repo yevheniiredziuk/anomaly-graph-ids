@@ -227,4 +227,32 @@ graph-based детекції. Для оцінки precision/recall ми пізн
 |---|---:|---|
 | `data/cleaned/{monday,tuesday,wednesday}.parquet` | 44 MB сумарно (15/13/16) | per-day cleaned flows |
 | `data/cleaned/edges_aggregated.parquet` | 5.9 MB | агреговані ребра (parquet) |
+| `data/cleaned/flows_for_postgres.csv` | 202 MB | non-aggregated flows для PostgreSQL baseline (T04) |
 | `data/neo4j-import/cicids2017_mon_tue_wed.csv` | 39 MB | вхід для Neo4j import (T07) |
+
+## PostgreSQL side (T04)
+
+Повні сирі (неагреговані) flows завантажуються у партиційовану таблицю
+`flows` через `\COPY`. Скрипт [`baseline/sql/load/load-flows.sh`](../baseline/sql/load/load-flows.sh):
+
+| Метрика | Значення |
+|---|---:|
+| COPY throughput | ~315 000 rows/sec |
+| COPY runtime (1.67 M flows) | ~5 с |
+| End-to-end runtime (drop indexes → COPY → recreate → populate hosts) | ~7 с |
+| `flows_mon` | 529 884 рядків · 122 MB |
+| `flows_tue` | 445 905 рядків · 96 MB |
+| `flows_wed` | 692 685 рядків · 150 MB |
+| `flows_default` | **0 рядків · 48 kB** (усі рядки розпартиціоновано коректно) |
+| `flows` total | 368 MB (heap + indexes) |
+| `hosts` | 15 673 рядків · 544 kB |
+| DB total | 378 MB |
+
+Label distribution у PostgreSQL повністю збігається з post-cleanup числами з T03
+(BENIGN 1 401 969, DoS Hulk 231 071, DoS GoldenEye 10 293, FTP-Patator 7 938,
+SSH-Patator 5 897, DoS slowloris 5 796, DoS Slowhttptest 5 499, Heartbleed 11).
+
+**Partition pruning verified** (query №5 в `baseline-queries.sql`):
+`EXPLAIN` для `WHERE t_start BETWEEN '2017-07-04 09:00' AND '10:00'` показує
+`Index Only Scan ... on flows_tue` — сканується тільки Tuesday-партиція,
+без дотику до `flows_mon`/`flows_wed`. Час виконання ~13 ms для 89 694 рядків.
