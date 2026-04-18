@@ -5,6 +5,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 ## Status
 
 - T01 done — Maven multi-module skeleton initialized.
+- T02 done — local infrastructure (Neo4j + GDS + APOC + PostgreSQL) via Docker Compose.
 
 ## Prerequisites
 
@@ -14,16 +15,59 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 
 ## Quick start
 
+### 1. Configure environment
+
 ```bash
-# 1. Start infrastructure (later — see T02)
+cp .env.example .env
+# Edit .env if you need custom ports or memory settings
+```
+
+### 2. Start infrastructure
+
+```bash
 docker compose up -d
+```
 
-# 2. Build
+Wait ~60 seconds for Neo4j to fully initialize (it downloads GDS plugin on first start).
+Check status:
+
+```bash
+docker compose ps
+docker compose logs neo4j -f
+```
+
+Verify GDS is loaded:
+
+```bash
+docker exec -it agids-neo4j cypher-shell -u neo4j -p changeme-local-only \
+    "CALL gds.version() YIELD gdsVersion RETURN gdsVersion;"
+```
+
+Expected output: a version string like `2.13.x` (or `2.xx.x` for newer Neo4j releases).
+
+Or run the full health check:
+
+```bash
+./scripts/verify-infra.sh
+```
+
+### 3. Build the project
+
+```bash
 ./mvnw clean install
+```
 
-# 3. Download dataset (see scripts/download_cicids2017.sh — T03)
-# 4. Run ETL
+### 4. Run ETL (later — see T06)
+
+```bash
 ./mvnw -pl etl spring-boot:run
+```
+
+### 5. Stop infrastructure
+
+```bash
+docker compose down           # stop, keep data
+docker compose down -v        # stop and WIPE all data (use with care)
 ```
 
 ## Modules

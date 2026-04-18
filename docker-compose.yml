@@ -1,0 +1,67 @@
+name: anomaly-graph-ids
+
+services:
+  neo4j:
+    image: neo4j:2026.03.1-community
+    container_name: agids-neo4j
+    restart: unless-stopped
+    ports:
+      - "${NEO4J_HTTP_PORT:-7474}:7474"
+      - "${NEO4J_BOLT_PORT:-7687}:7687"
+    environment:
+      NEO4J_AUTH: "${NEO4J_AUTH:-neo4j/changeme-local-only}"
+      NEO4J_server_memory_heap_initial__size: "${NEO4J_HEAP:-2G}"
+      NEO4J_server_memory_heap_max__size: "${NEO4J_HEAP:-2G}"
+      NEO4J_server_memory_pagecache_size: "${NEO4J_PAGECACHE:-1G}"
+      NEO4J_PLUGINS: '["graph-data-science", "apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: "gds.*,apoc.*"
+      NEO4J_dbms_security_procedures_allowlist: "gds.*,apoc.*"
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+      NEO4J_server_directories_import: "/import"
+      NEO4J_server_logs_debug_enabled: "false"
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+      - neo4j-plugins:/plugins
+      - ./data/neo4j-import:/import:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - agids-net
+
+  postgres:
+    image: postgres:16.6-alpine
+    container_name: agids-postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:-ids}"
+      POSTGRES_USER: "${POSTGRES_USER:-ids}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-changeme-local-only}"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./baseline/sql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ids} -d ${POSTGRES_DB:-ids}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - agids-net
+
+volumes:
+  neo4j-data:
+  neo4j-logs:
+  neo4j-plugins:
+  postgres-data:
+
+networks:
+  agids-net:
+    driver: bridge
