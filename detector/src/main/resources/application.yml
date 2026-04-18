@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: agids-detector
+
+neo4j:
+  uri: bolt://localhost:7687
+  username: neo4j
+  password: ${NEO4J_PASSWORD:changeme-local-only}
+  pool:
+    max-size: 50
+    connection-acquisition-timeout-seconds: 60
+
+logging:
+  level:
+    root: INFO
+    ua.mitit.ids: DEBUG
+    org.neo4j.driver: WARN

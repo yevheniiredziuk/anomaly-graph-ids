@@ -8,6 +8,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T02 done — local infrastructure (Neo4j + GDS + APOC + PostgreSQL) via Docker Compose.
 - T03 done — CICIDS2017 download + Engelen-style cleanup + 60s aggregation.
 - T04 done — PostgreSQL partitioned schema + indexes + COPY bulk-load.
+- T05 done — Neo4j migration runner + V001/V002 constraints & indexes applied.
 
 ## Prerequisites
 
@@ -100,7 +101,25 @@ Quick sanity check (sample, under 30 s):
 ./scripts/run_prepare.sh --limit-rows 1000
 ```
 
-### 5. Run ETL (later — see T06)
+### 5. Apply Neo4j schema migrations
+
+After `docker compose up -d` (and before running any ETL / detection jobs):
+
+```bash
+(cd detector && ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.detector.migration.MigrationCliApplication)
+```
+
+First run: applies V001 (constraints + range indexes) and V002 (baseline-property indexes).
+Subsequent runs: no-op (idempotent — state tracked in a `:SchemaMigration` node).
+
+Verify applied schema:
+
+```bash
+./scripts/verify-infra.sh
+```
+
+### 6. Run ETL (later — see T06)
 
 ```bash
 ./mvnw -pl etl spring-boot:run

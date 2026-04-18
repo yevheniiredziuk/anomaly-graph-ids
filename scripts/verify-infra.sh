@@ -43,6 +43,22 @@ docker exec agids-neo4j cypher-shell -u neo4j -p "${NEO4J_PASSWORD}" \
     "RETURN apoc.version() AS apoc_version;"
 
 echo ""
+echo "=== Verifying Neo4j schema (T05) ==="
+echo "--- Constraints ---"
+docker exec agids-neo4j cypher-shell -u neo4j -p "${NEO4J_PASSWORD}" \
+    "SHOW CONSTRAINTS YIELD name, entityType, labelsOrTypes, properties RETURN name, entityType, labelsOrTypes, properties ORDER BY name;"
+
+echo ""
+echo "--- Indexes (schema-level, excluding system) ---"
+docker exec agids-neo4j cypher-shell -u neo4j -p "${NEO4J_PASSWORD}" \
+    "SHOW INDEXES YIELD name, state, type, entityType, labelsOrTypes, properties WHERE type <> 'LOOKUP' RETURN name, state, type, entityType, labelsOrTypes, properties ORDER BY name;"
+
+echo ""
+echo "--- Migration history ---"
+docker exec agids-neo4j cypher-shell -u neo4j -p "${NEO4J_PASSWORD}" \
+    "MATCH (s:SchemaMigration) RETURN s.last_applied_version AS last_version, s.last_applied_at AS last_at, s.total_applied AS total;"
+
+echo ""
 echo "=== Checking PostgreSQL health ==="
 docker exec agids-postgres pg_isready -U "${POSTGRES_USER}" -d "${POSTGRES_DB}"
 
