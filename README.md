@@ -60,7 +60,10 @@ Or run the full health check:
 
 ### 4. Dataset setup
 
-Download raw CICIDS2017 (~240 MB compressed, ~2 GB extracted):
+Download raw CICIDS2017 (we use the **`GeneratedLabelledFlows.zip`** variant —
+~430 MB compressed — because it preserves Source/Destination IP and Timestamp
+fields required for graph construction; the `MachineLearningCSV.zip` variant
+does **not** and cannot be used here):
 
 ```bash
 ./scripts/download_cicids2017.sh
@@ -69,9 +72,10 @@ Download raw CICIDS2017 (~240 MB compressed, ~2 GB extracted):
 **Direct CIC download is currently gated behind a UNB request form** — the script
 will fail with an HTML response instead of a zip. In that case, follow the
 manual-download instructions in [`docs/dataset.md`](docs/dataset.md#manual-download--required):
-fill the form at https://www.unb.ca/cic/datasets/ids-2017.html, save the zip
-as `data/raw/cicids2017/MachineLearningCSV.zip`, then re-run the script
-(it will detect the existing archive and only extract).
+fill the form at https://www.unb.ca/cic/datasets/ids-2017.html, **request
+`GeneratedLabelledFlows.zip` specifically**, save it as
+`data/raw/cicids2017/GeneratedLabelledFlows.zip`, then re-run the script
+(it will validate, extract, and normalize the path to `data/raw/cicids2017/flows/`).
 
 Run preprocessing (creates cleaned + aggregated dataset):
 

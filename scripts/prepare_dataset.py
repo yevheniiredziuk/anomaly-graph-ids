@@ -8,7 +8,9 @@ Based on cleaning rules from:
   IEEE Security and Privacy Workshops (SPW).
 
 Pipeline:
-  1. Load raw CSVs from data/raw/cicids2017/MachineLearningCVE/
+  1. Load raw CSVs from data/raw/cicids2017/flows/
+     (flow-identity variant = GeneratedLabelledFlows / TrafficLabelling_;
+      feature-only "MachineLearningCVE" variant cannot be used — no Source IP / Timestamp)
   2. Normalize column names (strip whitespace — CICFlowMeter artefact)
   3. Remove duplicates (exact full-row match)
   4. Remove rows with NaN or Infinity in numeric columns
@@ -212,7 +214,7 @@ def aggregate_flows_to_edges(df: pd.DataFrame, bucket_seconds: int) -> pd.DataFr
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--raw-dir", type=Path, default=Path("data/raw/cicids2017/MachineLearningCVE"))
+    parser.add_argument("--raw-dir", type=Path, default=Path("data/raw/cicids2017/flows"))
     parser.add_argument("--out-dir", type=Path, default=Path("data/cleaned"))
     parser.add_argument("--neo4j-import-dir", type=Path, default=Path("data/neo4j-import"))
     parser.add_argument("--bucket-seconds", type=int, default=60)
