@@ -16,6 +16,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T14 done — PL/pgSQL rule-based detectors (port_scan, brute_force, dos_flood) on PostgreSQL baseline.
 - T15-T16 done — evaluation framework (P/R/F1 + per-attack Recall) + grid search for both methods.
 - T17 done — JMH benchmarks for query latency (Section 6.4).
+- T18 done — Section 6 figures (ROC, window-sweep, weight-simplex, per-attack, latency) via Python/matplotlib.
 
 ## Prerequisites
 

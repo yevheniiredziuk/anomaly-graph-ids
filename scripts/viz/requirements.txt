@@ -1,0 +1,4 @@
+# Plot-only deps (base preprocessing deps in scripts/requirements.txt are pandas/numpy/pyarrow).
+# Python 3.9+ compatible versions.
+matplotlib==3.9.4
+seaborn==0.13.2

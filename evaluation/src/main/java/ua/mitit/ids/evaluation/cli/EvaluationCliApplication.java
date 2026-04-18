@@ -1,5 +1,6 @@
 package ua.mitit.ids.evaluation.cli;
 
+import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import ua.mitit.ids.evaluation.EvaluationApplication;
 import ua.mitit.ids.evaluation.EvaluationService;
 import ua.mitit.ids.evaluation.collectors.BaselinePredictionsCollector;
 import ua.mitit.ids.evaluation.collectors.GraphPredictionsCollector;
+import ua.mitit.ids.evaluation.export.CsvExporter;
 import ua.mitit.ids.evaluation.groundtruth.GroundTruthBuilder;
 import ua.mitit.ids.evaluation.search.BaselineGridSearch;
 import ua.mitit.ids.evaluation.search.GraphGridSearch;
@@ -67,6 +69,7 @@ public final class EvaluationCliApplication {
           ctx.getBean(BaselinePredictionsCollector.class);
       GraphGridSearch graphGridSearch = ctx.getBean(GraphGridSearch.class);
       BaselineGridSearch baselineGridSearch = ctx.getBean(BaselineGridSearch.class);
+      CsvExporter csvExporter = ctx.getBean(CsvExporter.class);
 
       switch (mode) {
         case "evaluate-graph" ->
@@ -92,6 +95,23 @@ public final class EvaluationCliApplication {
           evaluateGraph(
               gtBuilder, evaluator, graphCollector, start, end, windowMinutes, w1, w2, w3, thetaA);
           evaluateBaseline(gtBuilder, evaluator, baselineCollector, start, end, windowMinutes);
+        }
+        case "export-roc" ->
+            csvExporter.exportRocData(
+                start, end, windowMinutes, w1, w2, w3, Path.of("results/roc_data.csv"));
+        case "export-per-attack" ->
+            csvExporter.exportPerAttackRecall(
+                start,
+                end,
+                windowMinutes,
+                w1,
+                w2,
+                w3,
+                thetaA,
+                Path.of("results/per_attack_recall.csv"));
+        case "export-simplex" -> {
+          var gsResult = graphGridSearch.search(start, end, windowMinutes, gtBuilder);
+          csvExporter.exportWeightSimplex(gsResult.all(), Path.of("results/weight_simplex.csv"));
         }
         default -> throw new IllegalArgumentException("Unknown mode: " + mode);
       }
