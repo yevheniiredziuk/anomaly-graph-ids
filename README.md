@@ -6,6 +6,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 
 - T01 done — Maven multi-module skeleton initialized.
 - T02 done — local infrastructure (Neo4j + GDS + APOC + PostgreSQL) via Docker Compose.
+- T03 done — CICIDS2017 download + Engelen-style cleanup + 60s aggregation.
 
 ## Prerequisites
 
@@ -57,7 +58,44 @@ Or run the full health check:
 ./mvnw clean install
 ```
 
-### 4. Run ETL (later — see T06)
+### 4. Dataset setup
+
+Download raw CICIDS2017 (~240 MB compressed, ~2 GB extracted):
+
+```bash
+./scripts/download_cicids2017.sh
+```
+
+**Direct CIC download is currently gated behind a UNB request form** — the script
+will fail with an HTML response instead of a zip. In that case, follow the
+manual-download instructions in [`docs/dataset.md`](docs/dataset.md#manual-download--required):
+fill the form at https://www.unb.ca/cic/datasets/ids-2017.html, save the zip
+as `data/raw/cicids2017/MachineLearningCSV.zip`, then re-run the script
+(it will detect the existing archive and only extract).
+
+Run preprocessing (creates cleaned + aggregated dataset):
+
+```bash
+./scripts/run_prepare.sh
+```
+
+First run creates Python venv in `scripts/.venv/` (~150 MB). The full pipeline
+takes 3–10 minutes on a modern laptop.
+
+Verify results:
+
+```bash
+ls -lh data/neo4j-import/
+# Should contain cicids2017_mon_tue_wed.csv (~50–150 MB)
+```
+
+Quick sanity check (sample, under 30 s):
+
+```bash
+./scripts/run_prepare.sh --limit-rows 1000
+```
+
+### 5. Run ETL (later — see T06)
 
 ```bash
 ./mvnw -pl etl spring-boot:run

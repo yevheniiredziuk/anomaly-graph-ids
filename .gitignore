@@ -57,3 +57,14 @@ postgres-data/
 *.log
 logs/
 .env
+
+# Dataset artefacts
+data/raw/
+data/cleaned/
+data/neo4j-import/*.csv
+data/neo4j-import/*.parquet
+
+# Python venv / cache
+scripts/.venv/
+scripts/__pycache__/
+*.pyc
