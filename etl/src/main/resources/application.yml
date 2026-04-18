@@ -3,6 +3,20 @@ spring:
     name: agids-etl
   main:
     banner-mode: "off"
+  # We provide our own DataSource (PostgresDataSourceConfig) and Driver
+  # (common.neo4j.Neo4jClientConfig) beans. Disable Spring's auto-configured
+  # JDBC/Data-JDBC and Spring-Data-Neo4j machinery — they eagerly probe
+  # connections at boot, which breaks the Neo4j-only CLI path when Postgres
+  # credentials do not match.
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.jdbc.JdbcRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.neo4j.Neo4jReactiveRepositoriesAutoConfiguration
 
 postgres:
   url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:ids}
@@ -12,8 +26,17 @@ postgres:
     max-size: 5
     connection-timeout-ms: 30000
 
+neo4j:
+  uri: bolt://${NEO4J_HOST:localhost}:${NEO4J_BOLT_PORT:7687}
+  username: ${NEO4J_USER:neo4j}
+  password: ${NEO4J_PASSWORD:changeme-local-only}
+  pool:
+    max-size: 10
+    connection-acquisition-timeout-seconds: 60
+
 logging:
   level:
     root: INFO
     ua.mitit.ids: DEBUG
+    org.neo4j.driver: WARN
     com.zaxxer.hikari: INFO

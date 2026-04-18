@@ -278,3 +278,54 @@ Java-варіант трохи повільніший через JVM + Spring Bo
 driver wrapping. Вибір на користь Java — testability
 ([`FlowsCopyLoaderIT`](../etl/src/test/java/ua/mitit/ids/etl/postgres/FlowsCopyLoaderIT.java))
 + майбутній streaming mode з Kafka (Section 7.3 статті).
+
+## Neo4j side (T07)
+
+Агреговані ребра завантажуються у Neo4j через `UNWIND $edges` з batch-розміром
+5 000 у межах кожної Bolt-транзакції. Реалізація — модуль `etl`, класи
+[`Neo4jUnwindLoader`](../etl/src/main/java/ua/mitit/ids/etl/neo4j/Neo4jUnwindLoader.java)
++ [`CsvFlowReader`](../etl/src/main/java/ua/mitit/ids/etl/neo4j/CsvFlowReader.java)
+(streaming-parser Apache Commons CSV).
+
+### Load run (1.67M flows → 329 k aggregated edges → Neo4j)
+
+| Метрика | Значення |
+|---|---:|
+| Edges loaded | **329 076** |
+| Unique hosts (Host nodes) | **15 673** |
+| Batches (size=5 000) | 66 |
+| Load runtime | **16.85 с** |
+| Throughput | **19 527 edges/sec** |
+| Database на диску (`/data/databases/neo4j`) | 66 MB |
+| Transaction log | 258 MB (до checkpoint'у; ефемерно) |
+| Schema-level indexes (after V001+V002) | 9 |
+
+**Per-label edge count** (повний збіг з T03 post-aggregation):
+
+| Label | Edges |
+|---|---:|
+| BENIGN | 328 863 |
+| FTP-Patator | 64 |
+| SSH-Patator | 63 |
+| DoS slowloris | 27 |
+| DoS Hulk | 21 |
+| DoS Slowhttptest | 19 |
+| Heartbleed | 11 |
+| DoS GoldenEye | 8 |
+
+### Порівняння ETL: PostgreSQL vs Neo4j
+
+| | PostgreSQL (T06) | Neo4j (T07) |
+|---|---:|---:|
+| Input | 1.67 M raw flows | 329 k aggregated edges |
+| Loader | `\COPY` via `CopyManager` | `UNWIND` batch=5000 |
+| Throughput | 275 k rows/sec | 19.5 k edges/sec |
+| Per-row work | server-side CSV parse → tuple insert | MERGE Host × 2 + CREATE edge per element |
+| Storage on disk | 368 MB | 66 MB (+258 MB tx log) |
+
+~14× різниця у throughput — очікувана: Neo4j UNWIND робить принципово більше
+роботи на ребро (двічі MERGE на Host з unique-constraint lookup + CREATE
+edge з 9 properties), PostgreSQL COPY — це низькорівневий tuple insert у
+heap. Обидва шляхи fit-for-purpose для свого обсягу: Section 6.4 статті
+порівнює не самі ETL-швидкості, а швидкість детекції на вже завантажених
+даних, що і є метою benchmark'у.

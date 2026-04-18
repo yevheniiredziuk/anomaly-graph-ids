@@ -10,6 +10,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T04 done — PostgreSQL partitioned schema + indexes + COPY bulk-load.
 - T05 done — Neo4j migration runner + V001/V002 constraints & indexes applied.
 - T06 done — Java ETL for PostgreSQL via CopyManager (~275k rows/sec).
+- T07 done — Java ETL for Neo4j via UNWIND batches (~19.5k edges/sec).
 
 ## Prerequisites
 
@@ -148,10 +149,26 @@ docker exec -it agids-postgres psql -U ids -d ids -c \
     "SELECT COUNT(*) AS flows, COUNT(DISTINCT source_ip) AS uniq_src FROM flows;"
 ```
 
-### 7. Run ETL into Neo4j (later — see T07)
+### 7. Load aggregated edges into Neo4j (T07)
+
+Assumes T03 preprocessing produced `data/neo4j-import/cicids2017_mon_tue_wed.csv`
+and T05 migrations applied.
 
 ```bash
-./mvnw -pl etl spring-boot:run
+(cd etl && ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.etl.cli.Neo4jEtlCliApplication \
+    -Dspring-boot.run.arguments="--csv=../data/neo4j-import/cicids2017_mon_tue_wed.csv --wipe-first")
+```
+
+Expected throughput: ~20 000 edges/sec with UNWIND batch=5000. Full CICIDS2017
+aggregated subset (~329k edges) loads in ~17 s.
+
+Verify after load:
+
+```bash
+docker exec -it agids-neo4j cypher-shell -u neo4j -p changeme-local-only \
+    "MATCH (h:Host) RETURN COUNT(h) AS hosts;
+     MATCH ()-[r:CONNECTS_TO]->() RETURN COUNT(r) AS edges;"
 ```
 
 ### 5. Stop infrastructure
