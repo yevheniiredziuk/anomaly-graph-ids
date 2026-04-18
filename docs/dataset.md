@@ -256,3 +256,25 @@ SSH-Patator 5 897, DoS slowloris 5 796, DoS Slowhttptest 5 499, Heartbleed 11).
 `EXPLAIN` для `WHERE t_start BETWEEN '2017-07-04 09:00' AND '10:00'` показує
 `Index Only Scan ... on flows_tue` — сканується тільки Tuesday-партиція,
 без дотику до `flows_mon`/`flows_wed`. Час виконання ~13 ms для 89 694 рядків.
+
+### Java ETL (T06)
+
+Java-альтернатива до `load-flows.sh` через `org.postgresql.copy.CopyManager`
+(модуль `etl`, класи `FlowsCopyLoader` + `HostsPopulator`). Потрібна для
+чесного benchmark-порівняння Java→Neo4j vs Java→PostgreSQL у Section 6.4
+статті.
+
+| Метрика | bash `load-flows.sh` (T04) | Java `FlowsCopyLoader` (T06) |
+|---|---:|---:|
+| COPY runtime (1.67 M rows) | ~5.3 с | **6.08 с** |
+| COPY throughput | ~315 k rows/sec | **274 k rows/sec** |
+| MB/sec | — | **33.2 MB/sec** |
+| End-to-end (incl. drop/create indexes + ANALYZE) | ~7 с | **~10 с** |
+| hosts populate | ~1 с (in-query) | **0.9 с** |
+
+Java-варіант трохи повільніший через JVM + Spring Boot startup (~1.5 с) і
+одну додаткову мережеву hop через HikariCP, але на тому ж порядку. Сам COPY
+через `CopyManager` еквівалентний server-side `COPY` — різниця тільки у
+driver wrapping. Вибір на користь Java — testability
+([`FlowsCopyLoaderIT`](../etl/src/test/java/ua/mitit/ids/etl/postgres/FlowsCopyLoaderIT.java))
++ майбутній streaming mode з Kafka (Section 7.3 статті).

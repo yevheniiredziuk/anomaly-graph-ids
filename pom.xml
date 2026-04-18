@@ -38,6 +38,7 @@
     <testcontainers.version>1.20.6</testcontainers.version>
     <jmh.version>1.37</jmh.version>
     <postgresql.version>42.7.4</postgresql.version>
+    <commons-csv.version>1.12.0</commons-csv.version>
 
     <spotless.version>2.43.0</spotless.version>
     <surefire.version>3.5.2</surefire.version>
@@ -63,6 +64,12 @@
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>${postgresql.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-csv</artifactId>
+        <version>${commons-csv.version}</version>
       </dependency>
 
       <dependency>
@@ -153,6 +160,12 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
+      </plugin>
+      <!-- Enable failsafe globally so any *IT.java test runs during the
+           integration-test phase. Failsafe is a no-op in modules without IT tests. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

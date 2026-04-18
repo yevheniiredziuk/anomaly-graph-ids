@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: agids-etl
+  main:
+    banner-mode: "off"
+
+postgres:
+  url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:ids}
+  username: ${POSTGRES_USER:ids}
+  password: ${POSTGRES_PASSWORD:changeme-local-only}
+  pool:
+    max-size: 5
+    connection-timeout-ms: 30000
+
+logging:
+  level:
+    root: INFO
+    ua.mitit.ids: DEBUG
+    com.zaxxer.hikari: INFO

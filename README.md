@@ -9,6 +9,7 @@ Prototype for scientific article: "Graph-based network anomaly detection using N
 - T03 done — CICIDS2017 download + Engelen-style cleanup + 60s aggregation.
 - T04 done — PostgreSQL partitioned schema + indexes + COPY bulk-load.
 - T05 done — Neo4j migration runner + V001/V002 constraints & indexes applied.
+- T06 done — Java ETL for PostgreSQL via CopyManager (~275k rows/sec).
 
 ## Prerequisites
 
@@ -119,7 +120,35 @@ Verify applied schema:
 ./scripts/verify-infra.sh
 ```
 
-### 6. Run ETL (later — see T06)
+### 6. Load flows into PostgreSQL (T06)
+
+Assumes T03 preprocessing produced `data/cleaned/flows_for_postgres.csv` and
+T04 schema is already applied.
+
+```bash
+(cd etl && ../mvnw spring-boot:run \
+    -Dspring-boot.run.main-class=ua.mitit.ids.etl.cli.PostgresEtlCliApplication \
+    -Dspring-boot.run.arguments="--csv=../data/cleaned/flows_for_postgres.csv --truncate-first")
+```
+
+If the Postgres container uses a non-default host port (our local `.env` maps
+it to `15432` to avoid collision with a host Postgres), pass it via env:
+
+```bash
+POSTGRES_PORT=15432 (cd etl && ../mvnw spring-boot:run ...)
+```
+
+Expected throughput: 200 000–300 000 rows/sec for the COPY stage on typical
+laptop hardware (CICIDS2017 Mon+Tue+Wed = 1.67 M rows loads in ~6–10 seconds).
+
+Verify after load:
+
+```bash
+docker exec -it agids-postgres psql -U ids -d ids -c \
+    "SELECT COUNT(*) AS flows, COUNT(DISTINCT source_ip) AS uniq_src FROM flows;"
+```
+
+### 7. Run ETL into Neo4j (later — see T07)
 
 ```bash
 ./mvnw -pl etl spring-boot:run
