@@ -2,6 +2,7 @@ package ua.mitit.ids.evaluation.search;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -99,6 +100,111 @@ public class GraphGridSearch {
         String.format("%.4f", best.f1()),
         String.format("%.4f", best.precision()),
         String.format("%.4f", best.recall()));
+    return new GridSearchResult(best, results);
+  }
+
+  /**
+   * Fine-grained grid search with corner simplex points + small θ_A step, re-using cached raw
+   * events. Designed to discover sensitivity profiles the coarse grid missed — specifically
+   * single-component corners (pure α₁, α₂, α₃) that the Phase 1 simplex crawl skipped (it required
+   * w_i ≥ 0.1 each).
+   *
+   * <p>Weight configurations (8): 3 pure corners, 3 edge midpoints, barycentre, and the coarse-grid
+   * winner (0.5, 0.4, 0.1).
+   *
+   * <p>θ_A: 37 points in [0.05, 0.95] step 0.025.
+   *
+   * <p>Total: 8 × 37 = 296 configurations; runtime on cached events ≈ 1–2 minutes.
+   */
+  public GridSearchResult searchFine(
+      OffsetDateTime valPeriodStart,
+      OffsetDateTime valPeriodEnd,
+      int windowSizeMinutes,
+      GroundTruthBuilder gtBuilder) {
+    log.info("Loading cached events for fine grid search...");
+    Set<ScoredHostWindow> rawEvents = collector.fetchRaw(valPeriodStart, valPeriodEnd);
+    var groundTruth = gtBuilder.build(valPeriodStart, valPeriodEnd, windowSizeMinutes);
+    var universe = evaluator.buildEvaluablePairs(valPeriodStart, valPeriodEnd, windowSizeMinutes);
+
+    List<WeightTriple> weights =
+        List.of(
+            new WeightTriple(1.0, 0.0, 0.0),
+            new WeightTriple(0.0, 1.0, 0.0),
+            new WeightTriple(0.0, 0.0, 1.0),
+            new WeightTriple(0.5, 0.5, 0.0),
+            new WeightTriple(0.5, 0.0, 0.5),
+            new WeightTriple(0.0, 0.5, 0.5),
+            new WeightTriple(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0),
+            new WeightTriple(0.5, 0.4, 0.1));
+
+    double[] thetas = new double[37];
+    for (int i = 0; i < 37; i++) thetas[i] = 0.05 + i * 0.025;
+
+    log.info(
+        "Fine grid: {} weight configs × {} thetas = {} configs",
+        weights.size(),
+        thetas.length,
+        weights.size() * thetas.length);
+
+    ForkJoinPool pool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
+    List<ConfigResult> results;
+    try {
+      results =
+          pool.submit(
+                  () ->
+                      weights.parallelStream()
+                          .flatMap(
+                              wt ->
+                                  Arrays.stream(thetas)
+                                      .mapToObj(
+                                          theta -> {
+                                            Set<HostWindow> predicted =
+                                                collector.applyConfig(
+                                                    rawEvents, wt.w1(), wt.w2(), wt.w3(), theta);
+                                            var r =
+                                                evaluator.evaluate(
+                                                    predicted, groundTruth, universe);
+                                            return new ConfigResult(
+                                                wt.w1(),
+                                                wt.w2(),
+                                                wt.w3(),
+                                                theta,
+                                                r.overall().f1(),
+                                                r.overall().precision(),
+                                                r.overall().recall());
+                                          }))
+                          .collect(Collectors.toList()))
+              .join();
+    } finally {
+      pool.shutdown();
+    }
+
+    results.sort(Comparator.comparingDouble(ConfigResult::f1).reversed());
+    ConfigResult best = results.get(0);
+    log.info(
+        "Fine grid best: w1={}, w2={}, w3={}, θA={} → F1={}, P={}, R={}",
+        best.w1(),
+        best.w2(),
+        best.w3(),
+        best.thetaA(),
+        String.format("%.4f", best.f1()),
+        String.format("%.4f", best.precision()),
+        String.format("%.4f", best.recall()));
+    log.info("Top-10 fine-grid configs:");
+    int n = Math.min(10, results.size());
+    for (int i = 0; i < n; i++) {
+      ConfigResult c = results.get(i);
+      log.info(
+          "  #{} w=({},{},{}) θA={} → F1={} P={} R={}",
+          i + 1,
+          String.format("%.3f", c.w1()),
+          String.format("%.3f", c.w2()),
+          String.format("%.3f", c.w3()),
+          String.format("%.3f", c.thetaA()),
+          String.format("%.4f", c.f1()),
+          String.format("%.4f", c.precision()),
+          String.format("%.4f", c.recall()));
+    }
     return new GridSearchResult(best, results);
   }
 

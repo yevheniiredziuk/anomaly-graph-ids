@@ -87,6 +87,11 @@ public final class EvaluationCliApplication {
         case "evaluate-baseline" ->
             evaluateBaseline(gtBuilder, evaluator, baselineCollector, start, end, windowMinutes);
         case "grid-search-graph" -> graphGridSearch.search(start, end, windowMinutes, gtBuilder);
+        case "grid-search-graph-fine" -> {
+          var fineResult = graphGridSearch.searchFine(start, end, windowMinutes, gtBuilder);
+          csvExporter.exportWeightSimplex(
+              fineResult.all(), Path.of("results/fine_grid_results.csv"));
+        }
         case "grid-search-baseline" ->
             baselineGridSearch.search(start, end, windowMinutes, gtBuilder);
         case "compare" -> {
