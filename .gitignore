@@ -69,3 +69,4 @@ scripts/.venv/
 scripts/__pycache__/
 *.pyc
 paper/
+docs/
