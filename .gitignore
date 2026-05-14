@@ -68,3 +68,4 @@ data/neo4j-import/*.parquet
 scripts/.venv/
 scripts/__pycache__/
 *.pyc
+paper/
