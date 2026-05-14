@@ -1,0 +1,84 @@
+=== Ablation no_alpha1 ===
+2026-04-19T12:49:38.065+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Starting EvaluationCliApplication using Java 23.0.1 with PID 77641 (/Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/evaluation/target/classes started by yevheniiredziuk in /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/evaluation)
+2026-04-19T12:49:38.067+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-04-19T12:49:38.360+03:00  INFO 77641 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Starting...
+2026-04-19T12:49:38.369+03:00  INFO 77641 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Start completed.
+2026-04-19T12:49:38.490+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Started EvaluationCliApplication in 0.589 seconds (process running for 0.753)
+2026-04-19T12:49:38.491+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   : Building ground truth for [2017-07-04T00:00Z, 2017-07-06T00:00Z) with 5-min windows
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   : Ground truth: 112 total (host, window) anomalous pairs across 7 attack types
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS Slowhttptest: 10 pairs
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   SSH-Patator: 28 pairs
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   FTP-Patator: 30 pairs
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   Heartbleed: 10 pairs
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS GoldenEye: 4 pairs
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS Hulk: 12 pairs
+2026-04-19T12:49:39.309+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS slowloris: 18 pairs
+2026-04-19T12:49:40.796+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.ids.evaluation.EvaluationService     : Evaluable universe: 76646 (host, window) pairs
+2026-04-19T12:49:55.020+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.c.GraphPredictionsCollector      : Fetched 3165946 raw graph events
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : ========== GRAPH ==========  TP=89 FP=57960 FN=23 TN=18574  P=0.0015  R=0.7946  F1=0.0031  Acc=0.2435
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Per-attack-type Recall:
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS Slowhttptest = 0.8000
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   SSH-Patator = 0.7500
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   FTP-Patator = 0.9000
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   Heartbleed = 0.5000
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS GoldenEye = 1.0000
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS Hulk = 0.9167
+2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS slowloris = 0.7222
+2026-04-19T12:49:55.518+03:00  INFO 77641 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Shutdown initiated...
+2026-04-19T12:49:55.521+03:00  INFO 77641 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Shutdown completed.
+=== Ablation no_alpha2 ===
+2026-04-19T12:49:57.988+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Starting EvaluationCliApplication using Java 23.0.1 with PID 77790 (/Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/evaluation/target/classes started by yevheniiredziuk in /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/evaluation)
+2026-04-19T12:49:57.991+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-04-19T12:49:58.279+03:00  INFO 77790 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Starting...
+2026-04-19T12:49:58.287+03:00  INFO 77790 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Start completed.
+2026-04-19T12:49:58.410+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Started EvaluationCliApplication in 0.586 seconds (process running for 0.749)
+2026-04-19T12:49:58.411+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   : Building ground truth for [2017-07-04T00:00Z, 2017-07-06T00:00Z) with 5-min windows
+2026-04-19T12:49:59.233+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   : Ground truth: 112 total (host, window) anomalous pairs across 7 attack types
+2026-04-19T12:49:59.234+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS Slowhttptest: 10 pairs
+2026-04-19T12:49:59.234+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   SSH-Patator: 28 pairs
+2026-04-19T12:49:59.234+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   FTP-Patator: 30 pairs
+2026-04-19T12:49:59.234+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   Heartbleed: 10 pairs
+2026-04-19T12:49:59.234+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS GoldenEye: 4 pairs
+2026-04-19T12:49:59.234+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS Hulk: 12 pairs
+2026-04-19T12:49:59.234+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS slowloris: 18 pairs
+2026-04-19T12:50:00.715+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.ids.evaluation.EvaluationService     : Evaluable universe: 76646 (host, window) pairs
+2026-04-19T12:50:14.685+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.c.GraphPredictionsCollector      : Fetched 3165946 raw graph events
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : ========== GRAPH ==========  TP=16 FP=4260 FN=96 TN=72274  P=0.0037  R=0.1429  F1=0.0073  Acc=0.9432
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Per-attack-type Recall:
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS Slowhttptest = 0.1000
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   SSH-Patator = 0.3214
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   FTP-Patator = 0.0667
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   Heartbleed = 0.1000
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS GoldenEye = 0.0000
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS Hulk = 0.0000
+2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS slowloris = 0.1667
+2026-04-19T12:50:15.158+03:00  INFO 77790 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Shutdown initiated...
+2026-04-19T12:50:15.162+03:00  INFO 77790 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Shutdown completed.
+=== Ablation no_alpha3 ===
+2026-04-19T12:50:17.816+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Starting EvaluationCliApplication using Java 23.0.1 with PID 77943 (/Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/evaluation/target/classes started by yevheniiredziuk in /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/evaluation)
+2026-04-19T12:50:17.818+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-04-19T12:50:18.115+03:00  INFO 77943 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Starting...
+2026-04-19T12:50:18.125+03:00  INFO 77943 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Start completed.
+2026-04-19T12:50:18.247+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Started EvaluationCliApplication in 0.597 seconds (process running for 0.765)
+2026-04-19T12:50:18.248+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   : Building ground truth for [2017-07-04T00:00Z, 2017-07-06T00:00Z) with 5-min windows
+2026-04-19T12:50:19.079+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   : Ground truth: 112 total (host, window) anomalous pairs across 7 attack types
+2026-04-19T12:50:19.080+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS Slowhttptest: 10 pairs
+2026-04-19T12:50:19.080+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   SSH-Patator: 28 pairs
+2026-04-19T12:50:19.080+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   FTP-Patator: 30 pairs
+2026-04-19T12:50:19.080+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   Heartbleed: 10 pairs
+2026-04-19T12:50:19.080+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS GoldenEye: 4 pairs
+2026-04-19T12:50:19.080+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS Hulk: 12 pairs
+2026-04-19T12:50:19.080+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.groundtruth.GroundTruthBuilder   :   DoS slowloris: 18 pairs
+2026-04-19T12:50:20.585+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.ids.evaluation.EvaluationService     : Evaluable universe: 76646 (host, window) pairs
+2026-04-19T12:50:34.533+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.c.GraphPredictionsCollector      : Fetched 3165946 raw graph events
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : ========== GRAPH ==========  TP=12 FP=2013 FN=100 TN=74521  P=0.0059  R=0.1071  F1=0.0112  Acc=0.9724
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : Per-attack-type Recall:
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS Slowhttptest = 0.1000
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   SSH-Patator = 0.1429
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   FTP-Patator = 0.0333
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   Heartbleed = 0.3000
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS GoldenEye = 0.0000
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS Hulk = 0.0000
+2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     :   DoS slowloris = 0.1667
+2026-04-19T12:50:34.998+03:00  INFO 77943 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Shutdown initiated...
+2026-04-19T12:50:35.019+03:00  INFO 77943 --- [agids-evaluation] [           main] com.zaxxer.hikari.HikariDataSource       : agids-evaluation-pg - Shutdown completed.

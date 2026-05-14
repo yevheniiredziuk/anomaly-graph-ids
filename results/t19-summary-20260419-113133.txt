@@ -1,0 +1,42 @@
+T19 experimental run summary
+==============================
+Timestamp:     20260419-113133
+Log file:      /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/t19-run-20260419-113133.log
+Ablation log:  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/t19-ablation-20260419-113133.txt
+
+Data volumes:
+  Neo4j Hosts:            15673
+  Postgres flows:         1668474
+  AnomalyEvents recorded: 3165946
+
+Best grid-search config:
+  w1      = 0.5
+  w2      = 0.4
+  w3      = 0.1
+  thetaA  = 0.6
+
+CSV artifacts:
+  217 rows  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/weight_simplex.csv
+  8 rows  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/per_attack_recall.csv
+  177 rows  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/roc_data.csv
+  11 rows  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/window_size_sweep.csv
+
+JMH results:
+  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/benchmark-20260419-111749.json
+  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/benchmark-20260418-234720.json
+
+Figures:
+  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/figures/fig_6_1_roc_curves.png
+  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/figures/fig_6_2_window_size.png
+  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/figures/fig_6_3_weight_simplex.png
+  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/figures/fig_6_4_per_attack_recall.png
+  /Users/yevheniiredziuk/Downloads/atricle 255 122/anomaly-graph-ids/results/figures/fig_6_5_latency.png
+
+Ablation headline numbers:
+  2026-04-19T12:49:55.291+03:00  INFO 77641 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : ========== GRAPH ==========  TP=89 FP=57960 FN=23 TN=18574  P=0.0015  R=0.7946  F1=0.0031  Acc=0.2435
+  2026-04-19T12:50:14.929+03:00  INFO 77790 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : ========== GRAPH ==========  TP=16 FP=4260 FN=96 TN=72274  P=0.0037  R=0.1429  F1=0.0073  Acc=0.9432
+  2026-04-19T12:50:34.773+03:00  INFO 77943 --- [agids-evaluation] [           main] u.m.i.e.cli.EvaluationCliApplication     : ========== GRAPH ==========  TP=12 FP=2013 FN=100 TN=74521  P=0.0059  R=0.1071  F1=0.0112  Acc=0.9724
+
+---
+Open a fresh Claude Code session, paste this file, and ask to fill the
+placeholders in SECTION_{5,6,7}.md and ABSTRACT.md.
