@@ -1,0 +1,198 @@
+{
+  "FTP-Patator": {
+    "attacker_ip": "172.16.0.1",
+    "label_value": "FTP-Patator",
+    "n_windows_with_attack": 15,
+    "degree_min": 1,
+    "degree_max": 1,
+    "degree_median": 1.0,
+    "fraction_windows_degree_eq_1": 1.0,
+    "per_window": [
+      {
+        "window_start": "2017-07-04 09:15:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 60
+      },
+      {
+        "window_start": "2017-07-04 09:20:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 665
+      },
+      {
+        "window_start": "2017-07-04 09:25:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 648
+      },
+      {
+        "window_start": "2017-07-04 09:30:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 639
+      },
+      {
+        "window_start": "2017-07-04 09:35:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 656
+      },
+      {
+        "window_start": "2017-07-04 09:40:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 650
+      },
+      {
+        "window_start": "2017-07-04 09:45:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 658
+      },
+      {
+        "window_start": "2017-07-04 09:50:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 660
+      },
+      {
+        "window_start": "2017-07-04 09:55:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 630
+      },
+      {
+        "window_start": "2017-07-04 10:00:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 651
+      },
+      {
+        "window_start": "2017-07-04 10:05:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 651
+      },
+      {
+        "window_start": "2017-07-04 10:10:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 670
+      },
+      {
+        "window_start": "2017-07-04 10:15:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 665
+      },
+      {
+        "window_start": "2017-07-04 10:20:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 34
+      },
+      {
+        "window_start": "2017-07-04 10:30:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 1
+      }
+    ]
+  },
+  "SSH-Patator": {
+    "attacker_ip": "172.16.0.1",
+    "label_value": "SSH-Patator",
+    "n_windows_with_attack": 14,
+    "degree_min": 1,
+    "degree_max": 2,
+    "degree_median": 1.0,
+    "fraction_windows_degree_eq_1": 0.8571428571428571,
+    "per_window": [
+      {
+        "window_start": "2017-07-04 02:05:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 89
+      },
+      {
+        "window_start": "2017-07-04 02:10:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 479
+      },
+      {
+        "window_start": "2017-07-04 02:15:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 444
+      },
+      {
+        "window_start": "2017-07-04 02:20:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 482
+      },
+      {
+        "window_start": "2017-07-04 02:25:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 483
+      },
+      {
+        "window_start": "2017-07-04 02:30:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 490
+      },
+      {
+        "window_start": "2017-07-04 02:35:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 495
+      },
+      {
+        "window_start": "2017-07-04 02:40:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 472
+      },
+      {
+        "window_start": "2017-07-04 02:45:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 480
+      },
+      {
+        "window_start": "2017-07-04 02:50:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 507
+      },
+      {
+        "window_start": "2017-07-04 02:55:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 478
+      },
+      {
+        "window_start": "2017-07-04 03:00:00+00:00",
+        "degree_simple_graph": 1,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 459
+      },
+      {
+        "window_start": "2017-07-04 03:05:00+00:00",
+        "degree_simple_graph": 2,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 453
+      },
+      {
+        "window_start": "2017-07-04 03:10:00+00:00",
+        "degree_simple_graph": 2,
+        "unique_attack_destinations": 1,
+        "total_flows_in_window": 190
+      }
+    ]
+  }
+}

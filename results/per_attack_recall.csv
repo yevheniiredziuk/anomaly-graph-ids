@@ -1,2 +1,8 @@
 attack_type,graph_recall,baseline_recall
-FTP-Patator,0.1667,0.4444
+DoS Slowhttptest,0.1000,1.0000
+SSH-Patator,0.1786,0.2857
+FTP-Patator,0.0333,0.4000
+Heartbleed,0.1000,0.1000
+DoS GoldenEye,0.0000,1.0000
+DoS Hulk,0.0000,1.0000
+DoS slowloris,0.1667,0.7222

@@ -1,0 +1,226 @@
+{
+  "config": {
+    "period": [
+      "2017-07-04 00:00:00+00:00",
+      "2017-07-06 00:00:00+00:00"
+    ],
+    "window": "5min",
+    "if_params": {
+      "n_estimators": 200,
+      "max_samples": 256,
+      "contamination": 0.001,
+      "random_state": 20260422,
+      "n_jobs": -1
+    },
+    "rule_thresholds": {
+      "port_scan_endpoints_min": 50,
+      "brute_force_attempts_min": 100,
+      "brute_force_short_ratio_min": 0.7,
+      "brute_force_short_us": 5000000,
+      "dos_flow_min": 1000,
+      "dos_concentration_min": 0.7
+    },
+    "feature_count": 21,
+    "feature_names": [
+      "flow_count",
+      "as_src_count",
+      "as_dst_count",
+      "flow_duration_mean",
+      "flow_duration_max",
+      "flow_duration_std",
+      "bytes_fwd_sum",
+      "bytes_bwd_sum",
+      "packets_fwd_sum",
+      "packets_bwd_sum",
+      "mean_pkt_size",
+      "mean_packets_per_flow",
+      "syn_count_sum",
+      "rst_count_sum",
+      "psh_count_sum",
+      "ack_count_sum",
+      "fin_count_sum",
+      "urg_count_sum",
+      "unique_remote_ips",
+      "unique_remote_ports",
+      "log_flow_count"
+    ],
+    "split": "per-day 50/50 temporal",
+    "rng_seed": 20260422
+  },
+  "universe": {
+    "victim_n": 76646,
+    "victim_n_pos": 112,
+    "source_n": 50727,
+    "source_n_pos": 56
+  },
+  "if_victim_runA": {
+    "P": 0.1589041095890411,
+    "R": 0.8285714285714286,
+    "F1": 0.26666666666666666,
+    "TP": 58,
+    "FP": 307,
+    "FN": 12,
+    "TN": 38082,
+    "n": 38459,
+    "n_pos": 70,
+    "threshold": 0.7444826405459106,
+    "train_F1_at_threshold": 0.125,
+    "bootstrap_95ci": {
+      "P": [
+        0.13896268543748108,
+        0.18013182137633674
+      ],
+      "R": [
+        0.7428571428571429,
+        0.9142857142857143
+      ],
+      "F1": [
+        0.23477658292388986,
+        0.299556464916295
+      ]
+    }
+  },
+  "if_source_sanity_C1": {
+    "P": 0.11320754716981132,
+    "R": 0.8571428571428571,
+    "F1": 0.2,
+    "TP": 30,
+    "FP": 235,
+    "FN": 5,
+    "TN": 25418,
+    "n": 25688,
+    "n_pos": 35,
+    "threshold": 0.7437735180768345,
+    "train_F1_at_threshold": 0.15319148936170213,
+    "bootstrap_95ci": {
+      "P": [
+        0.09608179800659217,
+        0.13200578512396693
+      ],
+      "R": [
+        0.7428571428571429,
+        0.9428571428571428
+      ],
+      "F1": [
+        0.1705858244937319,
+        0.23105307104791376
+      ]
+    }
+  },
+  "rule_source_runB": {
+    "P": 0.018363939899833055,
+    "R": 0.39285714285714285,
+    "F1": 0.03508771929824561,
+    "TP": 22,
+    "FP": 1176,
+    "FN": 34,
+    "TN": 49495,
+    "n": 50727,
+    "n_pos": 56,
+    "bootstrap_95ci": {
+      "P": [
+        0.012731833329509477,
+        0.024775814294889436
+      ],
+      "R": [
+        0.26785714285714285,
+        0.5357142857142857
+      ],
+      "F1": [
+        0.024308547287274083,
+        0.04735749605534084
+      ]
+    }
+  },
+  "rule_victim_sanity_C2": {
+    "P": 0.043072505384063174,
+    "R": 0.5357142857142857,
+    "F1": 0.07973421926910298,
+    "TP": 60,
+    "FP": 1333,
+    "FN": 52,
+    "TN": 75201,
+    "n": 76646,
+    "n_pos": 112,
+    "bootstrap_95ci": {
+      "P": [
+        0.03568707519506421,
+        0.0510369876473891
+      ],
+      "R": [
+        0.4375,
+        0.6339285714285714
+      ],
+      "F1": [
+        0.06633293601238081,
+        0.0944272471847968
+      ]
+    }
+  },
+  "mcnemar_if_vs_rule_victim": {
+    "b": 368,
+    "c": 14,
+    "chi2": 326.20157068062827,
+    "p_value": 0.0
+  },
+  "mcnemar_if_vs_rule_source": {
+    "b": 393,
+    "c": 18,
+    "chi2": 340.330900243309,
+    "p_value": 0.0
+  },
+  "per_attack_recall_if_victim": {
+    "DoS GoldenEye": {
+      "gt_in_test": 4,
+      "tp": 4,
+      "recall": 1.0
+    },
+    "DoS Hulk": {
+      "gt_in_test": 12,
+      "tp": 10,
+      "recall": 0.8333333333333334
+    },
+    "DoS Slowhttptest": {
+      "gt_in_test": 10,
+      "tp": 9,
+      "recall": 0.9
+    },
+    "DoS slowloris": {
+      "gt_in_test": 14,
+      "tp": 11,
+      "recall": 0.7857142857142857
+    },
+    "FTP-Patator": {
+      "gt_in_test": 30,
+      "tp": 24,
+      "recall": 0.8
+    }
+  },
+  "per_attack_recall_if_source": {
+    "DoS GoldenEye": {
+      "gt_in_test": 2,
+      "tp": 2,
+      "recall": 1.0
+    },
+    "DoS Hulk": {
+      "gt_in_test": 6,
+      "tp": 5,
+      "recall": 0.8333333333333334
+    },
+    "DoS Slowhttptest": {
+      "gt_in_test": 5,
+      "tp": 5,
+      "recall": 1.0
+    },
+    "DoS slowloris": {
+      "gt_in_test": 7,
+      "tp": 6,
+      "recall": 0.8571428571428571
+    },
+    "FTP-Patator": {
+      "gt_in_test": 15,
+      "tp": 12,
+      "recall": 0.8
+    }
+  }
+}

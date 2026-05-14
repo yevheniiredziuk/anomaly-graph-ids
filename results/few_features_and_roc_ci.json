@@ -1,0 +1,259 @@
+{
+  "config": {
+    "rng_seed": 20260422,
+    "n_bootstrap": 1000,
+    "if_params": {
+      "n_estimators": 200,
+      "max_samples": 256,
+      "contamination": 0.001,
+      "random_state": 20260422,
+      "n_jobs": -1
+    },
+    "features_3": [
+      "flow_count",
+      "bytes_fwd_sum",
+      "unique_remote_ports"
+    ],
+    "features_5": [
+      "flow_count",
+      "bytes_fwd_sum",
+      "unique_remote_ports",
+      "flow_duration_mean",
+      "log_flow_count"
+    ],
+    "features_21": [
+      "flow_count",
+      "as_src_count",
+      "as_dst_count",
+      "flow_duration_mean",
+      "flow_duration_max",
+      "flow_duration_std",
+      "bytes_fwd_sum",
+      "bytes_bwd_sum",
+      "packets_fwd_sum",
+      "packets_bwd_sum",
+      "mean_pkt_size",
+      "mean_packets_per_flow",
+      "syn_count_sum",
+      "rst_count_sum",
+      "psh_count_sum",
+      "ack_count_sum",
+      "fin_count_sum",
+      "urg_count_sum",
+      "unique_remote_ips",
+      "unique_remote_ports",
+      "log_flow_count"
+    ],
+    "purpose": "Контроль 'feature count vs feature nature' (Z.2): IF на 3/5 потокових ознаках для ізоляції ефекту кількості ознак від ефекту їх природи. Bootstrap CI для ROC-AUC (Z.4)."
+  },
+  "runs": [
+    {
+      "P": 0.08823529411764706,
+      "R": 0.5142857142857142,
+      "F1": 0.1506276150627615,
+      "TP": 18,
+      "FP": 186,
+      "FN": 17,
+      "TN": 25467,
+      "n": 25688,
+      "n_pos": 35,
+      "ROC_AUC": 0.9415885638549653,
+      "threshold": 0.7781157101821456,
+      "train_F1_at_threshold": 0.1511627906976744,
+      "feature_count": 3,
+      "features": [
+        "flow_count",
+        "bytes_fwd_sum",
+        "unique_remote_ports"
+      ],
+      "label": "IF_3_flow_features_source_only",
+      "bootstrap_95ci": {
+        "F1": [
+          0.10525166628361296,
+          0.1966049382716049
+        ],
+        "ROC_AUC": [
+          0.8666055209360086,
+          0.9921708544252691
+        ]
+      }
+    },
+    {
+      "P": 0.09326424870466321,
+      "R": 0.5142857142857142,
+      "F1": 0.15789473684210525,
+      "TP": 18,
+      "FP": 175,
+      "FN": 17,
+      "TN": 25478,
+      "n": 25688,
+      "n_pos": 35,
+      "ROC_AUC": 0.9871081633448608,
+      "threshold": 0.7524445486686048,
+      "train_F1_at_threshold": 0.1511627906976744,
+      "feature_count": 5,
+      "features": [
+        "flow_count",
+        "bytes_fwd_sum",
+        "unique_remote_ports",
+        "flow_duration_mean",
+        "log_flow_count"
+      ],
+      "label": "IF_5_flow_features_source_only",
+      "bootstrap_95ci": {
+        "F1": [
+          0.11058833867062408,
+          0.2085414161420386
+        ],
+        "ROC_AUC": [
+          0.9795723000929996,
+          0.9930715427324011
+        ]
+      }
+    },
+    {
+      "P": 0.11320754716981132,
+      "R": 0.8571428571428571,
+      "F1": 0.2,
+      "TP": 30,
+      "FP": 235,
+      "FN": 5,
+      "TN": 25418,
+      "n": 25688,
+      "n_pos": 35,
+      "ROC_AUC": 0.9865273345918883,
+      "threshold": 0.7437735180768345,
+      "train_F1_at_threshold": 0.15319148936170213,
+      "feature_count": 21,
+      "features": [
+        "flow_count",
+        "as_src_count",
+        "as_dst_count",
+        "flow_duration_mean",
+        "flow_duration_max",
+        "flow_duration_std",
+        "bytes_fwd_sum",
+        "bytes_bwd_sum",
+        "packets_fwd_sum",
+        "packets_bwd_sum",
+        "mean_pkt_size",
+        "mean_packets_per_flow",
+        "syn_count_sum",
+        "rst_count_sum",
+        "psh_count_sum",
+        "ack_count_sum",
+        "fin_count_sum",
+        "urg_count_sum",
+        "unique_remote_ips",
+        "unique_remote_ports",
+        "log_flow_count"
+      ],
+      "label": "IF_21_flow_features_source_only",
+      "bootstrap_95ci": {
+        "F1": [
+          0.1705858244937319,
+          0.23105307104791376
+        ],
+        "ROC_AUC": [
+          0.9764841761754405,
+          0.9940300772396434
+        ]
+      }
+    },
+    {
+      "P": 0.1589041095890411,
+      "R": 0.8285714285714286,
+      "F1": 0.26666666666666666,
+      "TP": 58,
+      "FP": 307,
+      "FN": 12,
+      "TN": 38082,
+      "n": 38459,
+      "n_pos": 70,
+      "ROC_AUC": 0.9693167313553361,
+      "threshold": 0.7444826405459106,
+      "train_F1_at_threshold": 0.125,
+      "feature_count": 21,
+      "features": [
+        "flow_count",
+        "as_src_count",
+        "as_dst_count",
+        "flow_duration_mean",
+        "flow_duration_max",
+        "flow_duration_std",
+        "bytes_fwd_sum",
+        "bytes_bwd_sum",
+        "packets_fwd_sum",
+        "packets_bwd_sum",
+        "mean_pkt_size",
+        "mean_packets_per_flow",
+        "syn_count_sum",
+        "rst_count_sum",
+        "psh_count_sum",
+        "ack_count_sum",
+        "fin_count_sum",
+        "urg_count_sum",
+        "unique_remote_ips",
+        "unique_remote_ports",
+        "log_flow_count"
+      ],
+      "label": "IF_21_flow_features_victim_tagging",
+      "bootstrap_95ci": {
+        "F1": [
+          0.23477658292388986,
+          0.299556464916295
+        ],
+        "ROC_AUC": [
+          0.9310412674017483,
+          0.9957190303770053
+        ]
+      }
+    },
+    {
+      "P": 0.043072505384063174,
+      "R": 0.5357142857142857,
+      "F1": 0.07973421926910298,
+      "TP": 60,
+      "FP": 1333,
+      "FN": 52,
+      "TN": 75201,
+      "n": 76646,
+      "n_pos": 112,
+      "ROC_AUC": 0.7591485950221936,
+      "bootstrap_95ci": {
+        "F1": [
+          0.06633293601238081,
+          0.0944272471847968
+        ],
+        "ROC_AUC": [
+          0.7103965231139101,
+          0.8080349209874976
+        ]
+      },
+      "label": "rule_based_victim_tagging"
+    },
+    {
+      "P": 0.018363939899833055,
+      "R": 0.39285714285714285,
+      "F1": 0.03508771929824561,
+      "TP": 22,
+      "FP": 1176,
+      "FN": 34,
+      "TN": 49495,
+      "n": 50727,
+      "n_pos": 56,
+      "ROC_AUC": 0.6848243007411959,
+      "bootstrap_95ci": {
+        "F1": [
+          0.024308547287274083,
+          0.04735749605534084
+        ],
+        "ROC_AUC": [
+          0.6226459837551487,
+          0.7560162970084325
+        ]
+      },
+      "label": "rule_based_source_only"
+    }
+  ]
+}

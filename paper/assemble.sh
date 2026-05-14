@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-# Idempotent T20 assembly: paper/*.md  →  paper/build/Kolinets-AGIDS-v1.docx
-# Usage:  cd paper && bash build/assemble.sh
+# Idempotent assembly: paper/*.md  →  paper/build/Redziuk-AGIDS-v12.docx
+# Usage:  cd paper && bash assemble.sh
 #
 # Depends on: python3, pandoc (brew install pandoc).
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PAPER_DIR="$(dirname "$SCRIPT_DIR")"
-REPO_ROOT="$(dirname "$PAPER_DIR")"
+REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
-cd "$PAPER_DIR"
+cd "$SCRIPT_DIR"
 rm -rf build
 mkdir -p build/figures
 
@@ -18,7 +17,6 @@ cp "$REPO_ROOT/results/figures/"*.png build/figures/
 # 2. Assemble article_full.md (strip author notes, status blockquotes, top h1;
 #    rewrite image paths from ../results/figures/ to figures/)
 python3 - <<'PY'
-import shutil
 from pathlib import Path
 
 PAPER = Path(".")
@@ -92,7 +90,7 @@ cd build
 pandoc article_full.md \
     --from gfm+tex_math_dollars+yaml_metadata_block \
     --to docx \
-    --output Kolinets-AGIDS-v1.docx \
+    --output Redziuk-AGIDS-v12.docx \
     --standalone \
     --resource-path=. \
     2>&1 | tee pandoc.log
@@ -101,5 +99,5 @@ echo ""
 echo "=== Build summary ==="
 echo "Markdown: $(wc -l < article_full.md) lines, $(wc -c < article_full.md) bytes"
 echo "Images:   $(ls figures/*.png | wc -l) PNGs"
-echo "Docx:     $(ls -la Kolinets-AGIDS-v1.docx | awk '{print $5}') bytes"
+echo "Docx:     $(ls -la Redziuk-AGIDS-v12.docx | awk '{print $5}') bytes"
 echo "Words:    $(pandoc article_full.md --to plain 2>/dev/null | wc -w)"
